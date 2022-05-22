@@ -11,6 +11,14 @@
 
 struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
     struct ListNode* head, * tail;
+    if (list1 == NULL)
+    {
+        return list2;
+    }
+    if (list2 == NULL)
+    {
+        return list1;
+    }
     //给一个带哨兵位的头节点进行尾插
     head = tail = (struct ListNode*)malloc(sizeof(struct ListNode));
     tail->next = NULL;
@@ -26,7 +34,7 @@ struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
         {
             tail->next = list2;
             tail = tail->next;
-            list2 = lsit2->next;
+            list2 = list2->next;
         }
     }
     if (list1)
