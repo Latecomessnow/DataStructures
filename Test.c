@@ -1,170 +1,104 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
-
-#include<stdio.h>
-#include<stdlib.h>
-#include<assert.h>
-#include<stdbool.h>
-
-typedef int STDataType;
-
-typedef struct Stack
-{
-	STDataType* data;
-	int top;
-	int capacity;
-}ST;
-
-void StackInit(ST* ps);
-
-void StackDestroy(ST* ps);
-
-void StackPush(ST* ps, STDataType x);
-
-void StackPop(ST* ps);
-
-//取栈顶元素
-STDataType StackTop(ST* ps);
-
-int StackSize(ST* ps);
-
-bool StackEmpty(ST* ps);
-
-void StackInit(ST* ps)
-{
-	assert(ps);
-	ps->data = NULL;
-	ps->top = 0;
-	ps->capacity = 0;
-}
-
-void StackDestroy(ST* ps)
-{
-	assert(ps);
-	free(ps->data);
-	ps->data = NULL;
-	ps->top = 0;
-	ps->capacity = 0;
-}
-
-void StackPush(ST* ps, STDataType x)
-{
-	assert(ps);
-	//先检查容量
-	if (ps->top == ps->capacity)
-	{
-		int newCapacity = ps->capacity == 0 ? 4 : ps->capacity * 2;
-		STDataType* tmp = (STDataType*)realloc(ps->data, sizeof(STDataType) * newCapacity);
-		if (tmp == NULL)
-		{
-			printf("relloc fail\n");
-			exit(-1);
-		}
-		ps->data = tmp;
-		ps->capacity = newCapacity;
-	}
-	ps->data[ps->top] = x;
-	ps->top++;
-}
-
-void StackPop(ST* ps)
-{
-	assert(ps);
-	assert(!StackEmpty(ps));
-	//虽然Pop掉了，但其实越界访问还是能够访问到元素
-	ps->top--;
-}
-
-STDataType StackTop(ST* ps)
-{
-	assert(ps);
-	assert(!StackEmpty(ps));
-	return ps->data[ps->top - 1];
-}
-
-bool StackEmpty(ST* ps)
-{
-	assert(ps);
-	//为空返回true，不为空返回false
-	return ps->top == 0;
-}
-
-int StackSize(ST* ps)
-{
-	assert(ps);
-	//直接返回top就可以了，因为top比最大的下标大1
-	return ps->top;
-}
-
-//用两个栈实现队列，一个push栈，一个pop栈
+//可以使用链表实现，但使用链表实现时要注意空和满的判断，可以加一个size记录或者多开一个空间
+//不存储有效数据当tail->next == head时为满，tail == head为空，但链表实现时取尾的数据较为麻烦
+//也可以使用数组实现，但下标到边界时要进行处理
 typedef struct {
-	ST pushst;
-	ST popst;
-} MyQueue;
+    int* a;
+    int k;
+    int head;
+    int tail;
+} MyCircularQueue;
 
 
-MyQueue* myQueueCreate() {
-	MyQueue* obj = (MyQueue*)malloc(sizeof(MyQueue));
-	StackInit(&obj->pushst);
-	StackInit(&obj->popst);
-	return obj;
+MyCircularQueue* myCircularQueueCreate(int k) {
+    MyCircularQueue* obj = (MyCircularQueue*)malloc(sizeof(MyCircularQueue));
+    if (obj == NULL)
+        exit(-1);
+    obj->a = (int*)malloc(sizeof(int) * (k + 1));//多开一个空间
+    if (obj->a == NULL)
+        exit(-1);
+    obj->k = k;
+    obj->head = obj->tail = 0;
+    return obj;
 }
 
-void myQueuePush(MyQueue* obj, int x) {
-	StackPush(&obj->pushst, x);
+bool myCircularQueueIsEmpty(MyCircularQueue* obj) {
+    //head和tail相等即为空
+    return obj->head == obj->tail;
 }
 
-int myQueuePop(MyQueue* obj) {
-	if (StackEmpty(&obj->popst))
-	{
-		//如果pop栈为空就把push栈拷贝到pop栈
-		//这样拷贝一次后数据就颠倒了，1，2，3，4就变成了4，3，2，1，1是栈顶就实现了队列的操作
-		while (!StackEmpty(&obj->pushst))
-		{
-			StackPush(&obj->popst, StackTop(&obj->pushst));
-			StackPop(&obj->pushst);
-		}
-	}
-	int top = StackTop(&obj->popst);
-	StackPop(&obj->popst);
-	return top;
+bool myCircularQueueIsFull(MyCircularQueue* obj) {
+    //要处理head == 0, tail == 4的特殊情况
+    int next = obj->tail + 1;
+    if (next == obj->k + 1)
+        next = 0;
+    //如果tail + 1 == head为满
+    return next == obj->head;
 }
 
-int myQueuePeek(MyQueue* obj) {
-	if (StackEmpty(&obj->popst))
-	{
-		//如果pop栈为空就把push栈拷贝到pop栈
-		//这样拷贝一次后数据就颠倒了，1，2，3，4就变成了4，3，2，1，1是栈顶就实现了队列的操作
-		while (!StackEmpty(&obj->pushst))
-		{
-			StackPush(&obj->popst, StackTop(&obj->pushst));
-			StackPop(&obj->pushst);
-		}
-	}
-	return StackTop(&obj->popst);
+bool myCircularQueueEnQueue(MyCircularQueue* obj, int value) {
+    assert(obj);
+    //如果满了就插入失败
+    if (myCircularQueueIsFull(obj))
+        return false;
+    obj->a[obj->tail] = value;
+    obj->tail++;
+    //如果head == 1,tail == 4,要处理一下这类情况，把越界的tail置0
+    if (obj->tail == obj->k + 1)
+        obj->tail = 0;
+    return true;
 }
 
-bool myQueueEmpty(MyQueue* obj) {
-	//队列中有两个栈，只有两个栈都为空，队列才为空，只要有一个栈不为空队列就不为空
-	return StackEmpty(&obj->pushst) && StackEmpty(&obj->popst);
+bool myCircularQueueDeQueue(MyCircularQueue* obj) {
+    assert(obj);
+    if (myCircularQueueIsEmpty(obj))
+        return false;
+    //出队列，头删,如果头到了尾也要处理一下
+    obj->head++;
+    if (obj->head == obj->k + 1)
+        obj->head = 0;
+    return true;
 }
-void myQueueFree(MyQueue* obj) {
-	//先把队列中的栈销毁了，再把obj给free掉就可以了
-	StackDestroy(&obj->pushst);
-	StackDestroy(&obj->popst);
-	free(obj);
+
+int myCircularQueueFront(MyCircularQueue* obj) {
+    assert(obj);
+    if (myCircularQueueIsEmpty(obj))
+        return -1;
+    return obj->a[obj->head];
+}
+
+int myCircularQueueRear(MyCircularQueue* obj) {
+    assert(obj);
+    if (myCircularQueueIsEmpty(obj))
+        return -1;
+    //
+    int prev = obj->tail - 1;
+    if (obj->tail == 0)
+        prev = obj->k;
+    return obj->a[prev];
+}
+
+void myCircularQueueFree(MyCircularQueue* obj) {
+    //先释放数组，在释放队列
+    free(obj->a);
+    free(obj);
 }
 
 /**
- * Your MyQueue struct will be instantiated and called as such:
- * MyQueue* obj = myQueueCreate();
- * myQueuePush(obj, x);
+ * Your MyCircularQueue struct will be instantiated and called as such:
+ * MyCircularQueue* obj = myCircularQueueCreate(k);
+ * bool param_1 = myCircularQueueEnQueue(obj, value);
 
- * int param_2 = myQueuePop(obj);
+ * bool param_2 = myCircularQueueDeQueue(obj);
 
- * int param_3 = myQueuePeek(obj);
+ * int param_3 = myCircularQueueFront(obj);
 
- * bool param_4 = myQueueEmpty(obj);
+ * int param_4 = myCircularQueueRear(obj);
 
- * myQueueFree(obj);
+ * bool param_5 = myCircularQueueIsEmpty(obj);
+
+ * bool param_6 = myCircularQueueIsFull(obj);
+
+ * myCircularQueueFree(obj);
 */
