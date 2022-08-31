@@ -1,0 +1,17 @@
+﻿  BinaryTree.c
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(176,21): warning C4047: “函数”:“QDataType”与“BTNode *”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(176,17): warning C4024: “QueuePush”: 形参和实参 2 的类型不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(183,29): warning C4047: “函数”:“QDataType”与“BinaryTreeNode *”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(183,23): warning C4024: “QueuePush”: 形参和实参 2 的类型不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(185,30): warning C4047: “函数”:“QDataType”与“BinaryTreeNode *”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(185,23): warning C4024: “QueuePush”: 形参和实参 2 的类型不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(179,1): warning C4047: “初始化”:“BTNode *”与“QDataType”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(237,21): warning C4047: “函数”:“QDataType”与“BTNode *”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(237,17): warning C4024: “QueuePush”: 形参和实参 2 的类型不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(244,29): warning C4047: “函数”:“QDataType”与“BinaryTreeNode *”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(244,23): warning C4024: “QueuePush”: 形参和实参 2 的类型不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(245,30): warning C4047: “函数”:“QDataType”与“BinaryTreeNode *”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(245,23): warning C4024: “QueuePush”: 形参和实参 2 的类型不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(240,1): warning C4047: “初始化”:“BTNode *”与“QDataType”的间接级别不同
+D:\Managed Code\DataStructure\data-struct\BinaryTree\BinaryTree.c(252,1): warning C4047: “初始化”:“BTNode *”与“QDataType”的间接级别不同
+  BinaryTree.vcxproj -> D:\Managed Code\DataStructure\data-struct\BinaryTree\Debug\BinaryTree.exe
