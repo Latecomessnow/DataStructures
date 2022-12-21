@@ -1,3 +1,0 @@
-D:\Managed Code\Project\test\C test\SepList\Debug\SepList.exe
-D:\Managed Code\Project\DateStruct\SepList\Debug\SepList.exe
-D:\Managed Code\DataStructure\data-struct\SepList\Debug\SepList.exe
